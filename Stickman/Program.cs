@@ -28,6 +28,7 @@ namespace Stickman
             var bot = new DiscordBot(args[0]);
 
             bot.RegisterCommand<BasicCommand>();
+            bot.RegisterCommand<MemoCommand>();
 
             bot.GuildMemberAdded += Bot_GuildMemberAdded;
 
