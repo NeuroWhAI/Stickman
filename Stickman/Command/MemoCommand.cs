@@ -110,16 +110,7 @@ namespace Stickman.Command
             string content)
         {
             await ctx.TriggerTypingAsync();
-
-
-            if (content.StartsWith("```"))
-            {
-                if (content.Length > 6)
-                {
-                    content = content.Substring(3, content.Length - 6).Trim();
-                }
-            }
-
+            
             bool result = MemoManager.AppendMemo(title, "\n" + content);
 
             await ctx.RespondAsync(result ? "Appended!" : "Not exists!");
