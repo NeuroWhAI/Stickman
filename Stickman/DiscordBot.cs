@@ -13,6 +13,8 @@ namespace Stickman
     {
         public bool Online { get; set; } = false;
 
+        public event AsyncEventHandler<GuildMemberAddEventArgs> GuildMemberAdded;
+
         public DiscordBot(string token)
         {
             m_discord = new DiscordClient(new DiscordConfiguration
@@ -53,6 +55,14 @@ namespace Stickman
                 Console.WriteLine("Bot ready!");
 
                 await Task.CompletedTask;
+            };
+
+            m_discord.GuildMemberAdded += async (args) =>
+            {
+                if (GuildMemberAdded != null)
+                {
+                    await GuildMemberAdded(args);
+                }
             };
 
 
