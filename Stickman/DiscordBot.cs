@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
@@ -40,12 +41,47 @@ namespace Stickman
         {
             m_discord.ConnectAsync().Wait();
 
+            foreach (var service in m_services)
+            {
+                service.InitService(m_discord);
+            }
+
             this.Online = true;
 
             while (this.Online)
             {
                 Task.Delay(1000).Wait();
+
+                foreach (var service in m_services)
+                {
+                    service.UpdateService(m_discord);
+                }
             }
+
+            foreach (var service in m_services)
+            {
+                service.DisposeService(m_discord);
+            }
+        }
+
+        public void AddService(IBotService service)
+        {
+            if (this.Online)
+            {
+                throw new InvalidOperationException();
+            }
+
+            m_services.Add(service);
+        }
+
+        public void RemoveService(IBotService service)
+        {
+            if (this.Online)
+            {
+                throw new InvalidOperationException();
+            }
+
+            m_services.Remove(service);
         }
 
         private void Init()
@@ -108,5 +144,7 @@ namespace Stickman
         private DiscordClient m_discord = null;
         private CommandsNextModule m_commands = null;
         private InteractivityModule m_interactivity = null;
+
+        private List<IBotService> m_services = new List<IBotService>();
     }
 }
