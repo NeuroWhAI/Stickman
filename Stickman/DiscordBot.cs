@@ -81,10 +81,14 @@ namespace Stickman
 
         private async Task Commands_CommandErrored(CommandErrorEventArgs e)
         {
-            if (e.Exception is ChecksFailedException ex)
+            if (e.Exception is ChecksFailedException)
             {
                 var emoji = DiscordEmoji.FromName(e.Context.Client, ":no_entry:");
                 await e.Context.RespondAsync($"{emoji} Access denied!");
+            }
+            else if (e.Exception is CommandNotFoundException)
+            {
+                Console.WriteLine(e.Exception.Message);
             }
             else
             {
