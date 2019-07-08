@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Entities;
 using Stickman.Command;
+using Stickman.BotService;
 
 namespace Stickman
 {
@@ -31,6 +32,8 @@ namespace Stickman
             bot.RegisterCommand<MemoCommand>();
 
             bot.GuildMemberAdded += Bot_GuildMemberAdded;
+
+            bot.AddService(new BotStatus());
 
             bot.Start();
         }

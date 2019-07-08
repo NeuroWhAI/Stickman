@@ -8,7 +8,7 @@ namespace Stickman
     public interface IBotService
     {
         void InitService(DiscordClient discord);
-        void UpdateService(DiscordClient discord);
         void DisposeService(DiscordClient discord);
+        void UpdateService(DiscordClient discord);
     }
 }
