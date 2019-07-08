@@ -54,13 +54,29 @@ namespace Stickman
 
                 foreach (var service in m_services)
                 {
-                    service.UpdateService(m_discord);
+                    try
+                    {
+                        service.UpdateService(m_discord);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.WriteLine(e.StackTrace);
+                    }
                 }
             }
 
             foreach (var service in m_services)
             {
-                service.DisposeService(m_discord);
+                try
+                {
+                    service.DisposeService(m_discord);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
+                }
             }
         }
 
