@@ -27,5 +27,33 @@ namespace Stickman.Command
 
             await ctx.RespondAsync(JsEngine.Evaluate(code, TimeSpan.FromSeconds(5)));
         }
+
+        [Command("status")]
+        [Description("상태 추가.")]
+        [RequireOwner, Hidden]
+        public async Task AddStatus(CommandContext ctx,
+            [RemainingText, Description("상태 메세지.")]
+            string status)
+        {
+            await ctx.TriggerTypingAsync();
+
+            GlobalMessenger.PushMessage("BotStatus", "AddStatus", status);
+
+            await ctx.RespondAsync("Added!");
+        }
+
+        [Command("delstatus")]
+        [Description("상태 제거.")]
+        [RequireOwner, Hidden]
+        public async Task RemoveStatus(CommandContext ctx,
+            [RemainingText, Description("상태 메세지.")]
+            string status)
+        {
+            await ctx.TriggerTypingAsync();
+
+            GlobalMessenger.PushMessage("BotStatus", "RemoveStatus", status);
+
+            await ctx.RespondAsync("Removed!");
+        }
     }
 }

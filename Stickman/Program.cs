@@ -33,7 +33,9 @@ namespace Stickman
 
             bot.GuildMemberAdded += Bot_GuildMemberAdded;
 
-            bot.AddService(new BotStatus());
+            bot.AddService(new BotStatus("BotStatus"));
+
+            GlobalMessenger.Start();
 
             bot.Start();
         }

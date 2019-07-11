@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 using DSharpPlus;
 using DSharpPlus.Entities;
 
@@ -8,75 +9,23 @@ namespace Stickman.BotService
 {
     public class BotStatus : IBotService
     {
-        public BotStatus()
+        public BotStatus(string id)
         {
-            m_statusList = new List<string>()
+            LoadStatusList();
+
+            GlobalMessenger.RegisterReceiver(id, (type, param) =>
             {
-                "The Powder Toy",
-                "Logisim",
-                "숨쉬기",
-                "인생",
-                "전투",
-                "비밀",
-                "Universe Sandbox",
-                "코딩",
-                "모딩",
-                "즐거운",
-                "행복한",
-                "끔찍한",
-                "신나는",
-                "엄청난",
-                "대단한",
-                "신비로운",
-                "심각한",
-                "자연스러운",
-                "사랑스러운",
-                "착한",
-                "나쁜",
-                "성스러운",
-                "구질구질한",
-                "소심한",
-                "대담한",
-                "귀여운",
-                "더러운",
-                "시원한",
-                "어마무시한",
-                "예쁜",
-                "찰진",
-                "혼란한",
-                "어지러운",
-                "떨어지는",
-                "날아가는",
-                "발사되는",
-                "게임",
-                "공부",
-                "힘든",
-                "지루한",
-                "구수한",
-                "깨알같은",
-                "신성한",
-                "알맞은",
-                "플레이",
-                "방치",
-                "아리송한",
-                "상관없는",
-                "엄중한",
-                "스틱맨",
-                "떨리는",
-                "여유로운",
-                "긴박한",
-                "급박한",
-                "창의적인",
-                "늠름한",
-                "이런",
-                "저런",
-                "그런",
-                "슬픈",
-                "슬기로운",
-                "평소 같은",
-                "좀 그런",
-                "아픈",
-            };
+                switch (type)
+                {
+                    case "AddStatus":
+                        AddStatus(param as string);
+                        break;
+
+                    case "RemoveStatus":
+                        RemoveStatus(param as string);
+                        break;
+                }
+            });
         }
 
         public void InitService(DiscordClient discord)
@@ -105,7 +54,65 @@ namespace Stickman.BotService
 
         private Random m_rand = new Random();
         private int m_leftGage = 0;
-        private List<string> m_statusList = null;
+        private List<string> m_statusList = new List<string>();
+        private readonly object m_lkStatus = new object();
+
+        private void AddStatus(string status)
+        {
+            lock (m_lkStatus)
+            {
+                if (!m_statusList.Contains(status))
+                {
+                    m_statusList.Add(status);
+                }
+            }
+
+            SaveStatusList();
+        }
+
+        private void RemoveStatus(string status)
+        {
+            lock (m_lkStatus)
+            {
+                m_statusList.Remove(status);
+            }
+
+            SaveStatusList();
+        }
+
+        private void SaveStatusList()
+        {
+            using (var sw = new StreamWriter("status.txt"))
+            {
+                lock (m_lkStatus)
+                {
+                    foreach (string status in m_statusList)
+                    {
+                        sw.WriteLine(status);
+                    }
+                }
+
+                sw.Close();
+            }
+        }
+
+        private void LoadStatusList()
+        {
+            using (var sr = new StreamReader("status.txt"))
+            {
+                while (!sr.EndOfStream)
+                {
+                    string status = sr.ReadLine();
+
+                    lock (m_lkStatus)
+                    {
+                        m_statusList.Add(status);
+                    }
+                }
+
+                sr.Close();
+            }
+        }
 
         private void SetNextGage()
         {
@@ -114,19 +121,24 @@ namespace Stickman.BotService
 
         private void SetNextStatus(DiscordClient discord)
         {
-            int index = m_rand.Next(m_statusList.Count * 2);
+            DiscordGame game = null;
 
-            if (index < m_statusList.Count)
+            lock (m_lkStatus)
             {
-                string status = m_statusList[index];
+                if (m_statusList.Count > 0)
+                {
+                    int index = m_rand.Next(m_statusList.Count * 2);
 
-                discord.UpdateStatusAsync(new DiscordGame(status)).Wait();
+                    if (index < m_statusList.Count)
+                    {
+                        string status = m_statusList[index];
+
+                        game = new DiscordGame(status);
+                    }
+                }
             }
-            else
-            {
-                // Clear status.
-                discord.UpdateStatusAsync().Wait();
-            }
+
+            discord.UpdateStatusAsync(game).Wait();
         }
     }
 }
