@@ -13,11 +13,15 @@ namespace Stickman
     public class DiscordBot
     {
         public bool Online { get; set; } = false;
+        public string Name { get; private set; }
 
         public event AsyncEventHandler<GuildMemberAddEventArgs> GuildMemberAdded;
+        public event AsyncEventHandler<MessageCreateEventArgs> MessageCreated;
 
-        public DiscordBot(string token)
+        public DiscordBot(string name, string token)
         {
+            this.Name = name;
+
             m_discord = new DiscordClient(new DiscordConfiguration
             {
                 Token = token,
@@ -100,6 +104,11 @@ namespace Stickman
             m_services.Remove(service);
         }
 
+        public DiscordEmoji CreateEmoji(string name)
+        {
+            return DiscordEmoji.FromName(m_discord, name);
+        }
+
         private void Init()
         {
             m_discord.Ready += async (arg) =>
@@ -117,6 +126,15 @@ namespace Stickman
                 }
             };
 
+            m_discord.MessageCreated += async (args) =>
+            {
+                if (MessageCreated != null)
+                {
+                    await MessageCreated(args);
+                }
+            };
+            m_discord.MessageCreated += OnMessageCreated;
+
 
             m_commands = m_discord.UseCommandsNext(new CommandsNextConfiguration
             {
@@ -129,6 +147,11 @@ namespace Stickman
 
 
             m_interactivity = m_discord.UseInteractivity(new InteractivityConfiguration());
+        }
+
+        private async Task OnMessageCreated(MessageCreateEventArgs e)
+        {
+            await GlobalMessenger.PushMessage(this.Name, "NewMessage", e);
         }
 
         private async Task Commands_CommandErrored(CommandErrorEventArgs e)

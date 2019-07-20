@@ -26,7 +26,7 @@ namespace Stickman
             }
 
 
-            var bot = new DiscordBot(args[0]);
+            var bot = new DiscordBot("Stickman", args[0]);
 
             bot.RegisterCommand<BasicCommand>();
             bot.RegisterCommand<MemoCommand>();
@@ -34,6 +34,17 @@ namespace Stickman
             bot.GuildMemberAdded += Bot_GuildMemberAdded;
 
             bot.AddService(new BotStatus("BotStatus"));
+
+            GlobalMessenger.RegisterReceiver("Stickman", (type, param) =>
+            {
+                if (type == "NewMessage" && param is MessageCreateEventArgs e)
+                {
+                    if (e.Channel.Name == "작품" && e.Message.Content.Contains("//cafe.naver.com/powdertoy/"))
+                    {
+                        e.Message.CreateReactionAsync(bot.CreateEmoji(":heart:")).Wait();
+                    }
+                }
+            });
 
             GlobalMessenger.Start();
 
