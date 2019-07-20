@@ -37,7 +37,7 @@ namespace Stickman.Command
         {
             await ctx.TriggerTypingAsync();
 
-            GlobalMessenger.PushMessage("BotStatus", "AddStatus", status);
+            await GlobalMessenger.PushMessage("BotStatus", "AddStatus", status);
 
             await ctx.RespondAsync("Added!");
         }
@@ -51,7 +51,7 @@ namespace Stickman.Command
         {
             await ctx.TriggerTypingAsync();
 
-            GlobalMessenger.PushMessage("BotStatus", "RemoveStatus", status);
+            await GlobalMessenger.PushMessage("BotStatus", "RemoveStatus", status);
 
             await ctx.RespondAsync("Removed!");
         }

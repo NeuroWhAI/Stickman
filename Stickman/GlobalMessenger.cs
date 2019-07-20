@@ -19,7 +19,7 @@ namespace Stickman
             m_started = true;
         }
 
-        public static void PushMessage(string id, string type, object param)
+        public static async Task PushMessage(string id, string type, object param)
         {
             if (!m_started)
             {
@@ -28,6 +28,8 @@ namespace Stickman
 
             if (m_receivers.ContainsKey(id))
             {
+                await Task.Yield();
+
                 Parallel.ForEach(m_receivers[id], receiver => receiver(type, param));
             }
         }
