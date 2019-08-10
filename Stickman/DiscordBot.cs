@@ -134,6 +134,8 @@ namespace Stickman
                 }
             };
             m_discord.MessageCreated += OnMessageCreated;
+            m_discord.MessageReactionAdded += OnMessageReactionAdded;
+            m_discord.MessageReactionRemoved += OnMessageReactionRemoved;
 
 
             m_commands = m_discord.UseCommandsNext(new CommandsNextConfiguration
@@ -152,6 +154,16 @@ namespace Stickman
         private async Task OnMessageCreated(MessageCreateEventArgs e)
         {
             await GlobalMessenger.PushMessage(this.Name, "NewMessage", e);
+        }
+
+        private async Task OnMessageReactionAdded(MessageReactionAddEventArgs e)
+        {
+            await GlobalMessenger.PushMessage(this.Name, "AddReaction", e);
+        }
+
+        private async Task OnMessageReactionRemoved(MessageReactionRemoveEventArgs e)
+        {
+            await GlobalMessenger.PushMessage(this.Name, "RemoveReaction", e);
         }
 
         private async Task Commands_CommandErrored(CommandErrorEventArgs e)
