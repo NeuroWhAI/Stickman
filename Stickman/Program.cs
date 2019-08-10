@@ -35,7 +35,7 @@ namespace Stickman
 
             bot.AddService(new BotStatus("BotStatus"));
 
-            GlobalMessenger.RegisterReceiver("Stickman", (type, param) =>
+            GlobalMessenger.RegisterReceiver(bot.Name, (type, param) =>
             {
                 if (type == "NewMessage" && param is MessageCreateEventArgs e)
                 {
