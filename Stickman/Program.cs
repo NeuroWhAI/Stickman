@@ -34,7 +34,7 @@ namespace Stickman
             bot.GuildMemberAdded += Bot_GuildMemberAdded;
 
             bot.AddService(new BotService.BotStatus("BotStatus"));
-            bot.AddService(new MemberService.UserService("Membership", bot.Name));
+            bot.AddService(new MemberService.ProfileService("Membership", bot.Name));
 
             GlobalMessenger.RegisterReceiver(bot.Name, (type, param) =>
             {

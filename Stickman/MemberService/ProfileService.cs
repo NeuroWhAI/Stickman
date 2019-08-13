@@ -9,9 +9,9 @@ using Stickman.Command;
 
 namespace Stickman.MemberService
 {
-    public class UserService : IBotService
+    public class ProfileService : IBotService
     {
-        public UserService(string id, string botId)
+        public ProfileService(string id, string botId)
         {
             GlobalMessenger.RegisterReceiver(botId, (type, param) =>
             {
