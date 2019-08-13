@@ -35,6 +35,7 @@ namespace Stickman
 
             bot.AddService(new BotService.BotStatus("BotStatus"));
             bot.AddService(new MemberService.ProfileService("Membership", bot.Name));
+            bot.AddService(new MemberService.JudgeService("Judge", bot.Name));
 
             GlobalMessenger.RegisterReceiver(bot.Name, (type, param) =>
             {

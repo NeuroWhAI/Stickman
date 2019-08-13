@@ -39,7 +39,7 @@ namespace Stickman.Command
         [RequireRolesAttribute("스탭")]
         public async Task WelcomeUser(CommandContext ctx,
            [RemainingText, Description("대상 멤버 언급.")]
-            string dummy)
+            string mention)
         {
             await ctx.TriggerTypingAsync();
 
@@ -51,7 +51,7 @@ namespace Stickman.Command
             }
             else
             {
-                var role = ctx.Guild.GetRole(596712853268987916ul); // "회원" 역할.
+                var role = ctx.Guild.GetRole(DiscordConstants.MemberRoleId); // "회원" 역할.
 
                 foreach (var user in users)
                 {
@@ -60,6 +60,56 @@ namespace Stickman.Command
                 }
 
                 await ctx.RespondAsync("완료!");
+            }
+        }
+
+        [Command("punish")]
+        [Description("특정 멤버를 일정 기간 정지시킵니다.")]
+        [RequireRolesAttribute("스탭")]
+        public async Task PunishUser(CommandContext ctx,
+           [Description("대상 멤버 언급.")]
+            string mention,
+           [Description("정지시킬 시간(초). 음수일 경우 무기한 정지합니다.")]
+            int time)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var users = ctx.Message.MentionedUsers;
+
+            if (users.Count == 1)
+            {
+                await GlobalMessenger.PushMessage("Judge", "PunishUser",
+                    new CommandContextAdv<Tuple<int>>(ctx, Tuple.Create(time)));
+
+                await ctx.RespondAsync("처리 완료.");
+            }
+            else
+            {
+                await ctx.RespondAsync("대상을 하나만 지정해주세요.");
+            }
+        }
+
+        [Command("release")]
+        [Description("특정 멤버의 정지를 해제합니다.")]
+        [RequireRolesAttribute("스탭")]
+        public async Task ReleaseUser(CommandContext ctx,
+           [RemainingText, Description("대상 멤버 언급.")]
+            string mention)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var users = ctx.Message.MentionedUsers;
+
+            if (users.Count == 1)
+            {
+                await GlobalMessenger.PushMessage("Judge", "ReleaseUser",
+                    new CommandContextAdv<Tuple<string>>(ctx, Tuple.Create(mention)));
+
+                await ctx.RespondAsync("처리 완료.");
+            }
+            else
+            {
+                await ctx.RespondAsync("대상을 하나만 지정해주세요.");
             }
         }
     }
