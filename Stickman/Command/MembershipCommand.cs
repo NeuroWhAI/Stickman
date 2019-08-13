@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
@@ -31,6 +32,35 @@ namespace Stickman.Command
 
             await GlobalMessenger.PushMessage("Membership", "EditProfile",
                 new CommandContextAdv<Tuple<string>>(ctx, Tuple.Create(description)));
+        }
+
+        [Command("welcome")]
+        [Description("회원 자격을 부여합니다.")]
+        [RequireRolesAttribute("스탭")]
+        public async Task WelcomeUser(CommandContext ctx,
+           [RemainingText, Description("대상 멤버 언급.")]
+            string dummy)
+        {
+            await ctx.TriggerTypingAsync();
+
+            var users = ctx.Message.MentionedUsers;
+
+            if (users.Count <= 0)
+            {
+                await ctx.RespondAsync("자격을 부여할 멤버들을 함께 언급해주세요.");
+            }
+            else
+            {
+                var role = ctx.Guild.GetRole(596712853268987916ul); // "회원" 역할.
+
+                foreach (var user in users)
+                {
+                    var member = await ctx.Guild.GetMemberAsync(user.Id);
+                    await ctx.Guild.GrantRoleAsync(member, role, "Welcome!");
+                }
+
+                await ctx.RespondAsync("완료!");
+            }
         }
     }
 }
