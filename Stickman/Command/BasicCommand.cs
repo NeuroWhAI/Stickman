@@ -19,6 +19,7 @@ namespace Stickman.Command
 
         [Command("shutdown")]
         [Description("봇 종료.")]
+        [RequireOwner, Hidden]
         public async Task Shutdown(CommandContext ctx)
         {
             await ctx.RespondAsync("Terminating...");
