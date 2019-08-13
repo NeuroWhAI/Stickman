@@ -17,6 +17,15 @@ namespace Stickman.Command
             await ctx.RespondAsync("pong!");
         }
 
+        [Command("shutdown")]
+        [Description("봇 종료.")]
+        public async Task Shutdown(CommandContext ctx)
+        {
+            await ctx.RespondAsync("Terminating...");
+
+            await GlobalMessenger.PushMessage("Stickman", "Shutdown", string.Empty);
+        }
+
         [Command("js")]
         [Description("스크립트 실행.")]
         public async Task EvalScript(CommandContext ctx,

@@ -149,6 +149,15 @@ namespace Stickman
 
 
             m_interactivity = m_discord.UseInteractivity(new InteractivityConfiguration());
+
+
+            GlobalMessenger.RegisterReceiver(this.Name, (type, param) =>
+            {
+                if (type == "Shutdown")
+                {
+                    this.Online = false;
+                }
+            });
         }
 
         private async Task OnMessageCreated(MessageCreateEventArgs e)
