@@ -19,7 +19,7 @@ namespace Stickman.Command
             await ctx.TriggerTypingAsync();
 
             await GlobalMessenger.PushMessage("Membership", "ShowProfile",
-                new CommandContextAdv<Tuple<string>>(ctx, Tuple.Create(user)));
+                CommandContextAdv.Create(ctx));
         }
 
         [Command("introduce")]
@@ -31,7 +31,7 @@ namespace Stickman.Command
             await ctx.TriggerTypingAsync();
 
             await GlobalMessenger.PushMessage("Membership", "EditProfile",
-                new CommandContextAdv<Tuple<string>>(ctx, Tuple.Create(description)));
+                CommandContextAdv.Create(ctx, description));
         }
 
         [Command("welcome")]
@@ -79,7 +79,7 @@ namespace Stickman.Command
             if (users.Count == 1)
             {
                 await GlobalMessenger.PushMessage("Judge", "PunishUser",
-                    new CommandContextAdv<Tuple<int>>(ctx, Tuple.Create(time)));
+                    CommandContextAdv.Create(ctx, time));
 
                 await ctx.RespondAsync("처리 완료.");
             }
@@ -103,7 +103,7 @@ namespace Stickman.Command
             if (users.Count == 1)
             {
                 await GlobalMessenger.PushMessage("Judge", "ReleaseUser",
-                    new CommandContextAdv<Tuple<string>>(ctx, Tuple.Create(mention)));
+                    CommandContextAdv.Create(ctx));
 
                 await ctx.RespondAsync("처리 완료.");
             }

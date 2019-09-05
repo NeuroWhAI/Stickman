@@ -57,20 +57,20 @@ namespace Stickman.MemberService
                 switch (type)
                 {
                     case "PunishUser":
-                        if (param is CommandContextAdv<Tuple<int>> ctxPunish)
+                        if (param is CommandContextAdv<int> ctxPunish)
                         {
                             var ctx = ctxPunish.Context;
                             var users = ctx.Message.MentionedUsers;
 
                             foreach (var user in users)
                             {
-                                PunishUser(ctx.Client, user.Id, ctxPunish.Arguments.Item1);
+                                PunishUser(ctx.Client, user.Id, ctxPunish.Argument);
                             }
                         }
                         break;
 
                     case "ReleaseUser":
-                        if (param is CommandContextAdv<Tuple<string>> ctxRelease)
+                        if (param is CommandContextAdv ctxRelease)
                         {
                             var ctx = ctxRelease.Context;
                             var users = ctx.Message.MentionedUsers;

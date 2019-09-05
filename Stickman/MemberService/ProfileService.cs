@@ -29,16 +29,16 @@ namespace Stickman.MemberService
                 switch (type)
                 {
                     case "ShowProfile":
-                        if (param is CommandContextAdv<Tuple<string>> ctxShow)
+                        if (param is CommandContextAdv ctxShow)
                         {
                             ShowProfile(ctxShow.Context);
                         }
                         break;
 
                     case "EditProfile":
-                        if (param is CommandContextAdv<Tuple<string>> ctxEdit)
+                        if (param is CommandContextAdv<string> ctxEdit)
                         {
-                            EditProfile(ctxEdit.Context, ctxEdit.Arguments.Item1);
+                            EditProfile(ctxEdit.Context, ctxEdit.Argument);
                         }
                         break;
                 }
