@@ -30,12 +30,14 @@ namespace Stickman
             bot.RegisterCommand<BasicCommand>();
             bot.RegisterCommand<MemoCommand>();
             bot.RegisterCommand<MembershipCommand>();
+            bot.RegisterCommand<SubchannelCommand>();
 
             bot.GuildMemberAdded += Bot_GuildMemberAdded;
 
             bot.AddService(new BotService.BotStatus("BotStatus"));
             bot.AddService(new MemberService.ProfileService("Membership", bot.Name));
             bot.AddService(new MemberService.JudgeService("Judge", bot.Name));
+            bot.AddService(new SubchannelService.SubchannelService("Subchannel"));
 
             GlobalMessenger.RegisterReceiver(bot.Name, (type, param) =>
             {
