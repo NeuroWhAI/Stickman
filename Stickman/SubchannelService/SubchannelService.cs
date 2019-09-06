@@ -108,7 +108,7 @@ namespace Stickman.SubchannelService
 
         public void UpdateService(DiscordClient discord)
         {
-            // TODO: 오랫동안 대화가 없는 서브 채널은 휴면 상태로 전환.
+            
         }
 
         private string CreateChannel(DiscordGuild guild, string name, string subject)
