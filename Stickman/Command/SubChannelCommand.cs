@@ -213,6 +213,33 @@ namespace Stickman.Command
                 CommandContextAdv.Create(ctx, name));
         }
 
+        [Command("close")]
+        [Description("서브 채널을 완전히 삭제합니다.")]
+        [RequireRolesAttribute("스탭")]
+        public async Task CloseChannel(CommandContext ctx,
+           [RemainingText, Description("채널 이름.")]
+            string name = "")
+        {
+            name = RefineChannelName(name);
+
+            await ctx.TriggerTypingAsync();
+
+            if (ctx.Guild == null)
+            {
+                await ctx.RespondAsync("서버에서 명령을 사용해주세요.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                await ctx.RespondAsync("채널 이름은 공백일 수 없습니다.");
+                return;
+            }
+
+            await GlobalMessenger.PushMessage("Subchannel", "CloseChannel",
+                CommandContextAdv.Create(ctx, name));
+        }
+
         /*[Command("reopen")]
         [Description("휴면 상태로 전환된 서브 채널을 다시 활성화시킵니다.")]
         public async Task ReopenChannel(CommandContext ctx,

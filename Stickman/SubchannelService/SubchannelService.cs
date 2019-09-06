@@ -64,6 +64,17 @@ namespace Stickman.SubchannelService
                         }
                         break;
 
+                    case "CloseChannel":
+                        if (param is CommandContextAdv<string> ctxClose
+                            && ctxClose.Context.Guild != null)
+                        {
+                            ctx = ctxClose.Context;
+                            string name = ctxClose.Argument;
+
+                            response = CloseChannel(ctx.Guild, name);
+                        }
+                        break;
+
                     case "ReopenChannel":
                         if (param is CommandContextAdv<string> ctxOpen
                             && ctxOpen.Context.Guild != null)
@@ -177,11 +188,7 @@ namespace Stickman.SubchannelService
 
         private string JoinChannel(DiscordGuild guild, ulong userId, string name)
         {
-            var subchannels = guild.GetChannel(DiscordConstants.SubchannelGroupId);
-
-            var targetChan = (from chan in subchannels.Children
-                             where chan.Name == name
-                             select chan).FirstOrDefault();
+            var targetChan = FindSubchannel(guild, name);
 
             if (targetChan == null)
             {
@@ -236,6 +243,38 @@ namespace Stickman.SubchannelService
             return "채널을 나갔습니다.";
         }
 
+        private string CloseChannel(DiscordGuild guild, string name)
+        {
+            var targetChan = FindSubchannel(guild, name);
+
+            if (targetChan != null)
+            {
+                targetChan.DeleteAsync("Close the subchannel.").Wait();
+            }
+
+
+            string roleName = ROLE_PREFIX + name;
+
+            var chanRole = (from role in guild.Roles
+                            where role.Name == roleName
+                            select role).FirstOrDefault();
+
+            if (chanRole != null)
+            {
+                guild.DeleteRoleAsync(chanRole, "Close the subchannel.").Wait();
+            }
+
+
+            if (targetChan != null || chanRole != null)
+            {
+                return "제거되었습니다.";
+            }
+            else
+            {
+                return "존재하지 않는 채널입니다.";
+            }
+        }
+
         private string ReopenChannel(string name)
         {
             throw new NotImplementedException();
@@ -244,6 +283,15 @@ namespace Stickman.SubchannelService
         private bool CheckUserSubchannelRole(DiscordMember user, string channelName)
         {
             return user.Roles.Any((role) => role.Name == ROLE_PREFIX + channelName);
+        }
+
+        private DiscordChannel FindSubchannel(DiscordGuild guild, string name)
+        {
+            var subchannels = guild.GetChannel(DiscordConstants.SubchannelGroupId);
+
+            return (from chan in subchannels.Children
+                    where chan.Name == name
+                    select chan).FirstOrDefault();
         }
     }
 }
