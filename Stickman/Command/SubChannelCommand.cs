@@ -236,8 +236,31 @@ namespace Stickman.Command
                 return;
             }
 
-            await GlobalMessenger.PushMessage("Subchannel", "CloseChannel",
-                CommandContextAdv.Create(ctx, name));
+
+            await ctx.RespondAsync($"정말로 '{name}' 채널을 영구적으로 삭제할까요? (Y/N)");
+
+            var interactivity = ctx.Client.GetInteractivityModule();
+            var msg = await interactivity.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(2));
+
+            if (msg == null)
+            {
+                await ctx.RespondAsync($"'{name}' 채널 삭제가 취소되었습니다.");
+                return;
+            }
+
+            string res = msg.Message.Content.ToLower();
+
+            await ctx.TriggerTypingAsync();
+
+            if (res == "y")
+            {
+                await GlobalMessenger.PushMessage("Subchannel", "CloseChannel",
+                    CommandContextAdv.Create(ctx, name));
+            }
+            else
+            {
+                await ctx.RespondAsync("채널 삭제가 취소되었습니다.");
+            }
         }
 
         //##################################################################################
