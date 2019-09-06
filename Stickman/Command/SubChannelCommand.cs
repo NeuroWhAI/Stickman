@@ -15,10 +15,10 @@ namespace Stickman.Command
         [Command("channel")]
         [Description("서브 채널을 생성합니다.")]
         public async Task CreateChannel(CommandContext ctx,
-            [RemainingText, Description("채널 이름. 10자 이하이며 영어, 한글 등의 문자와 붙임표(-)만 허용됩니다.")]
+            [RemainingText, Description("채널 이름. 10자 이하이며 영어(소문자), 한글 등의 문자와 붙임표(-)만 허용됩니다.")]
             string name = "")
         {
-            name = name.Trim().Replace(' ', '-');
+            name = RefineChannelName(name);
 
             await ctx.TriggerTypingAsync();
 
@@ -167,7 +167,7 @@ namespace Stickman.Command
            [RemainingText, Description("참여할 채널 이름.")]
             string name = "")
         {
-            name = name.Trim().Replace(' ', '-');
+            name = RefineChannelName(name);
 
             await ctx.TriggerTypingAsync();
 
@@ -193,7 +193,7 @@ namespace Stickman.Command
            [RemainingText, Description("나갈 채널 이름.")]
             string name = "")
         {
-            name = name.Trim().Replace(' ', '-');
+            name = RefineChannelName(name);
 
             await ctx.TriggerTypingAsync();
 
@@ -219,7 +219,7 @@ namespace Stickman.Command
            [RemainingText, Description("채널 이름.")]
             string name = "")
         {
-            name = name.Trim().Replace(' ', '-');
+            name = RefineChannelName(name);
 
             await ctx.TriggerTypingAsync();
 
@@ -238,5 +238,17 @@ namespace Stickman.Command
             await GlobalMessenger.PushMessage("Subchannel", "ReopenChannel",
                 CommandContextAdv.Create(ctx, name));
         }*/
+
+        //##################################################################################
+
+        private string RefineChannelName(string rawName)
+        {
+            if (rawName == null)
+            {
+                return string.Empty;
+            }
+
+            return rawName.Trim().Replace(' ', '-').ToLower();
+        }
     }
 }
