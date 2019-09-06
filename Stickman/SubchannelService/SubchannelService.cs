@@ -149,8 +149,7 @@ namespace Stickman.SubchannelService
             // Private 채널로 만듦.
             try
             {
-                var everyoneRole = guild.GetRole(DiscordConstants.EveryoneRoleId);
-                subchannel.AddOverwriteAsync(everyoneRole, Permissions.None, Permissions.AccessChannels).Wait();
+                subchannel.AddOverwriteAsync(guild.EveryoneRole, Permissions.None, Permissions.AccessChannels).Wait();
                 subchannel.AddOverwriteAsync(chanRole, Permissions.AccessChannels, Permissions.None).Wait();
             }
             catch (Exception e)
