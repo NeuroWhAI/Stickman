@@ -31,7 +31,7 @@ namespace Stickman.Command
             await ctx.TriggerTypingAsync();
 
             await GlobalMessenger.PushMessage("Membership", "EditProfile",
-                CommandContextAdv.Create(ctx, description));
+                CommandContextAdv.Create(ctx, description ?? string.Empty));
         }
 
         [Command("welcome")]

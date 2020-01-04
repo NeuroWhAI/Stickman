@@ -35,7 +35,7 @@ namespace Stickman.MemberService
             using (var bw = new BinaryWriter(new FileStream(filename, FileMode.Create)))
             {
                 bw.Write(Id);
-                bw.Write(Description);
+                bw.Write(Description ?? string.Empty);
                 bw.Write(Level);
                 bw.Write(Exp);
 

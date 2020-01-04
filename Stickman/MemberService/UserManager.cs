@@ -66,9 +66,17 @@ namespace Stickman.MemberService
                 {
                     if (!user.Saved)
                     {
-                        user.Save(Path.Combine(Root, user.Id + ".dat"));
+                        try
+                        {
+                            user.Save(Path.Combine(Root, user.Id + ".dat"));
 
-                        user.Saved = true;
+                            user.Saved = true;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                            Console.WriteLine(e.StackTrace);
+                        }
                     }
                 }
             }
