@@ -17,6 +17,7 @@ namespace Stickman.Utility
                 try
                 {
                     var engine = new ScriptEngine();
+                    engine.RecursionDepthLimit = 128;
                     
                     result = engine.Evaluate(code).ToString();
                 }
@@ -38,6 +39,11 @@ namespace Stickman.Utility
             }
 
             return result;
+        }
+
+        private static bool CheckRecursiveLoop(string code)
+        {
+            throw new NotImplementedException();
         }
     }
 }
