@@ -35,7 +35,7 @@ namespace Stickman.Command
         {
             await ctx.TriggerTypingAsync();
 
-            await ctx.RespondAsync(JsEngine.Evaluate(code, TimeSpan.FromSeconds(5)));
+            await ctx.RespondAsync(JsEngine.Evaluate(code, TimeSpan.FromSeconds(3)));
         }
 
         [Command("status")]

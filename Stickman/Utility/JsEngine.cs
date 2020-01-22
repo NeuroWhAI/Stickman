@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using Jurassic;
+using System.Threading.Tasks;
+using Jint;
 
 namespace Stickman.Utility
 {
@@ -10,35 +11,22 @@ namespace Stickman.Utility
     {
         public static string Evaluate(string code, TimeSpan timeout)
         {
-            string result = string.Empty;
-
-            var job = new Thread(() =>
+            try
             {
-                try
-                {
-                    var engine = new ScriptEngine();
-                    engine.RecursionDepthLimit = 128;
-                    
-                    result = engine.Evaluate(code).ToString();
-                }
-                catch (Exception e)
-                {
-                    result = e.Message;
-                }
-            });
+                string result = new Engine(cfg => cfg
+                    .LimitRecursion(128)
+                    .MaxStatements(1024)
+                    .TimeoutInterval(timeout))
+                    .Execute(code)
+                    .GetCompletionValue()
+                    .ToString();
 
-            job.Start();
-
-            job.Join(timeout);
-
-            if (job.ThreadState != ThreadState.Stopped)
-            {
-                job.Abort();
-
-                return "TIME_OUT";
+                return result;
             }
-
-            return result;
+            catch (Exception e)
+            {
+                return e.Message;
+            }
         }
     }
 }
