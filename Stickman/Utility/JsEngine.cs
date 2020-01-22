@@ -40,10 +40,5 @@ namespace Stickman.Utility
 
             return result;
         }
-
-        private static bool CheckRecursiveLoop(string code)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
