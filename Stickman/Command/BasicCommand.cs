@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Stickman.Utility;
@@ -64,6 +65,40 @@ namespace Stickman.Command
             await GlobalMessenger.PushMessage("BotStatus", "RemoveStatus", status);
 
             await ctx.RespondAsync("Removed!");
+        }
+
+        [Command("pick")]
+        [Description("무작위 항목 선택.")]
+        public async Task PickRandom(CommandContext ctx,
+            [RemainingText, Description("목록. 개행, 쉼표, 공백 순으로 분리 우선도 높음.")]
+            string listStr)
+        {
+            if (string.IsNullOrWhiteSpace(listStr))
+            {
+                return;
+            }
+
+            await ctx.TriggerTypingAsync();
+
+            char token = ' ';
+
+            if (listStr.Contains('\n'))
+            {
+                token = '\n';
+            }
+            else if (listStr.Contains(','))
+            {
+                token = ',';
+            }
+
+            var list = listStr.Split(token).ToList();
+            list.RemoveAll(s => string.IsNullOrWhiteSpace(s));
+
+            if (list.Count > 0)
+            {
+                string choice = list[RandEngine.GetInt(0, list.Count)].Trim();
+                await ctx.RespondAsync(choice);
+            }
         }
     }
 }
