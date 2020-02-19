@@ -190,13 +190,11 @@ namespace Stickman.MemoService
             }
         }
 
-        public static List<string> ListMemo(string keyword)
+        public static IEnumerable<string> ListMemo(string keyword)
         {
-            var files = Directory.GetFiles(Root, keyword);
-
-            return files
-                .Where(x => Path.GetExtension(x) == ".txt")
-                .Select(x => Path.GetFileNameWithoutExtension(x)).ToList();
+            return Directory.EnumerateFiles(Root, "*.txt")
+                .Where((file) => Path.GetFileNameWithoutExtension(file).Contains(keyword))
+                .Select(x => Path.GetFileNameWithoutExtension(x));
         }
 
         public static List<Memo> ListRecentMemo()
