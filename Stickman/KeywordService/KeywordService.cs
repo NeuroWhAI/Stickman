@@ -148,8 +148,15 @@ namespace Stickman.KeywordService
             else
             {
                 // 추가
-                m_manager.Add(id, keyword);
-                return "Added!";
+                if (m_manager.KeywordCount(id) < 10)
+                {
+                    m_manager.Add(id, keyword);
+                    return "Added!";
+                }
+                else
+                {
+                    return "Count limit reached!";
+                }
             }
         }
     }

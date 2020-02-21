@@ -70,6 +70,17 @@ namespace Stickman.KeywordService
             return false;
         }
 
+        public int KeywordCount(ulong user)
+        {
+            var list = GetKeywordList(user);
+            if (list != null)
+            {
+                return list.Count;
+            }
+
+            return 0;
+        }
+
         public void Add(ulong user, string keyword)
         {
             var list = m_keywordDic.GetOrAdd(user, (_) => new KeywordSet());
