@@ -31,6 +31,7 @@ namespace Stickman
             bot.RegisterCommand<MemoCommand>();
             bot.RegisterCommand<MembershipCommand>();
             bot.RegisterCommand<SubchannelCommand>();
+            bot.RegisterCommand<KeywordCommand>();
 
             bot.GuildMemberAdded += Bot_GuildMemberAdded;
 
@@ -38,6 +39,7 @@ namespace Stickman
             bot.AddService(new MemberService.ProfileService("Membership", bot.Name));
             bot.AddService(new MemberService.JudgeService("Judge", bot.Name));
             bot.AddService(new SubchannelService.SubchannelService("Subchannel"));
+            bot.AddService(new KeywordService.KeywordService("Keyword", bot.Name));
 
             GlobalMessenger.RegisterReceiver(bot.Name, (type, param) =>
             {
