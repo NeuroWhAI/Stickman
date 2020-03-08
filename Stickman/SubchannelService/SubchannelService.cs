@@ -125,7 +125,7 @@ namespace Stickman.SubchannelService
             DiscordRole chanRole = null;
             try
             {
-                chanRole = guild.CreateRoleAsync(ROLE_PREFIX + name, color: DiscordColor.Grayple, mentionable: true).Result;
+                chanRole = guild.CreateRoleAsync(ROLE_PREFIX + name, color: DiscordColor.Grayple).Result;
             }
             catch (Exception e)
             {
