@@ -97,7 +97,7 @@ namespace Stickman.Command
             if (list.Count > 0)
             {
                 string choice = list[RandEngine.GetInt(0, list.Count)].Trim();
-                await ctx.RespondAsync(choice);
+                await ctx.RespondAsync($"{ctx.User.Mention}님을 위한 선택: {choice}");
             }
         }
     }
