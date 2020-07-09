@@ -78,7 +78,7 @@ namespace Stickman.MemberService
 
             int exp = 1;
 
-            if (channel == "작품" && content.Contains("//cafe.naver.com/powdertoy/"))
+            if (channel == "작품" && content.Contains("cafe.naver.com/powdertoy/"))
             {
                 exp = 500;
             }

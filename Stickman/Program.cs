@@ -45,7 +45,7 @@ namespace Stickman
             {
                 if (type == "NewMessage" && param is MessageCreateEventArgs e)
                 {
-                    if (e.Channel.Name == "작품" && e.Message.Content.Contains("//cafe.naver.com/powdertoy/"))
+                    if (e.Channel.Name == "작품" && e.Message.Content.Contains("cafe.naver.com/powdertoy/"))
                     {
                         e.Message.CreateReactionAsync(bot.CreateEmoji(":heart:")).Wait();
                     }
