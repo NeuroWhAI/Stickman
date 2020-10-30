@@ -8,7 +8,7 @@ using DSharpPlus.CommandsNext.Attributes;
 
 namespace Stickman.Command
 {
-    class MembershipCommand
+    class MembershipCommand : BaseCommandModule
     {
         [Command("profile")]
         [Description("회원 프로필 보기.")]
@@ -36,7 +36,7 @@ namespace Stickman.Command
 
         [Command("welcome")]
         [Description("회원 자격을 부여합니다.")]
-        [RequireRolesAttribute("스탭")]
+        [RequireRoles(RoleCheckMode.Any, "스탭")]
         public async Task WelcomeUser(CommandContext ctx,
            [RemainingText, Description("대상 멤버 언급.")]
             string mention)
@@ -56,7 +56,7 @@ namespace Stickman.Command
                 foreach (var user in users)
                 {
                     var member = await ctx.Guild.GetMemberAsync(user.Id);
-                    await ctx.Guild.GrantRoleAsync(member, role, "Welcome!");
+                    await member.GrantRoleAsync(role, "Welcome!");
                 }
 
                 await ctx.RespondAsync("완료!");
@@ -65,7 +65,7 @@ namespace Stickman.Command
 
         [Command("punish")]
         [Description("특정 멤버를 일정 기간 정지시킵니다.")]
-        [RequireRolesAttribute("스탭")]
+        [RequireRoles(RoleCheckMode.Any, "스탭")]
         public async Task PunishUser(CommandContext ctx,
            [Description("대상 멤버 언급.")]
             string mention,
@@ -91,7 +91,7 @@ namespace Stickman.Command
 
         [Command("release")]
         [Description("특정 멤버의 정지를 해제합니다.")]
-        [RequireRolesAttribute("스탭")]
+        [RequireRoles(RoleCheckMode.Any, "스탭")]
         public async Task ReleaseUser(CommandContext ctx,
            [RemainingText, Description("대상 멤버 언급.")]
             string mention)

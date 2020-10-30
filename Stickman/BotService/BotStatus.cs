@@ -121,7 +121,7 @@ namespace Stickman.BotService
 
         private void SetNextStatus(DiscordClient discord)
         {
-            DiscordGame game = null;
+            DiscordActivity activity = null;
 
             lock (m_lkStatus)
             {
@@ -133,12 +133,12 @@ namespace Stickman.BotService
                     {
                         string status = m_statusList[index];
 
-                        game = new DiscordGame(status);
+                        activity = new DiscordActivity(status);
                     }
                 }
             }
 
-            discord.UpdateStatusAsync(game).Wait();
+            discord.UpdateStatusAsync(activity).Wait();
         }
     }
 }

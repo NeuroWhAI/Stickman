@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.CommandsNext.Exceptions;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using Emzi0767.Utilities;
 
 namespace Stickman
 {
@@ -15,8 +17,8 @@ namespace Stickman
         public bool Online { get; set; } = false;
         public string Name { get; private set; }
 
-        public event AsyncEventHandler<GuildMemberAddEventArgs> GuildMemberAdded;
-        public event AsyncEventHandler<MessageCreateEventArgs> MessageCreated;
+        public event AsyncEventHandler<DiscordClient, GuildMemberAddEventArgs> GuildMemberAdded;
+        public event AsyncEventHandler<DiscordClient, MessageCreateEventArgs> MessageCreated;
 
         public DiscordBot(string name, string token)
         {
@@ -26,17 +28,13 @@ namespace Stickman
             {
                 Token = token,
                 TokenType = TokenType.Bot,
-#if DEBUG
-                LogLevel = LogLevel.Debug,
-                UseInternalLogHandler = true,
-#endif
             });
 
 
             Init();
         }
 
-        public void RegisterCommand<T>() where T : class
+        public void RegisterCommand<T>() where T : BaseCommandModule
         {
             m_commands.RegisterCommands<T>();
         }
@@ -111,26 +109,26 @@ namespace Stickman
 
         private void Init()
         {
-            m_discord.Ready += async (arg) =>
+            m_discord.Ready += async (client, arg) =>
             {
                 Console.WriteLine("Bot ready!");
 
                 await Task.CompletedTask;
             };
 
-            m_discord.GuildMemberAdded += async (args) =>
+            m_discord.GuildMemberAdded += async (client, args) =>
             {
                 if (GuildMemberAdded != null)
                 {
-                    await GuildMemberAdded(args);
+                    await GuildMemberAdded(client, args);
                 }
             };
 
-            m_discord.MessageCreated += async (args) =>
+            m_discord.MessageCreated += async (client, args) =>
             {
                 if (MessageCreated != null)
                 {
-                    await MessageCreated(args);
+                    await MessageCreated(client, args);
                 }
             };
             m_discord.MessageCreated += OnMessageCreated;
@@ -140,7 +138,7 @@ namespace Stickman
 
             m_commands = m_discord.UseCommandsNext(new CommandsNextConfiguration
             {
-                StringPrefix = "?",
+                StringPrefixes = new[] { "?" },
                 CaseSensitive = false,
             });
 
@@ -148,7 +146,7 @@ namespace Stickman
             m_commands.CommandErrored += Commands_CommandErrored;
 
 
-            m_interactivity = m_discord.UseInteractivity(new InteractivityConfiguration());
+            m_interactivity = m_discord.UseInteractivity();
 
 
             GlobalMessenger.RegisterReceiver(this.Name, (type, param) =>
@@ -160,22 +158,22 @@ namespace Stickman
             });
         }
 
-        private async Task OnMessageCreated(MessageCreateEventArgs e)
+        private async Task OnMessageCreated(DiscordClient client, MessageCreateEventArgs e)
         {
             await GlobalMessenger.PushMessage(this.Name, "NewMessage", e);
         }
 
-        private async Task OnMessageReactionAdded(MessageReactionAddEventArgs e)
+        private async Task OnMessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs e)
         {
             await GlobalMessenger.PushMessage(this.Name, "AddReaction", e);
         }
 
-        private async Task OnMessageReactionRemoved(MessageReactionRemoveEventArgs e)
+        private async Task OnMessageReactionRemoved(DiscordClient client, MessageReactionRemoveEventArgs e)
         {
             await GlobalMessenger.PushMessage(this.Name, "RemoveReaction", e);
         }
 
-        private async Task Commands_CommandErrored(CommandErrorEventArgs e)
+        private async Task Commands_CommandErrored(CommandsNextExtension ext, CommandErrorEventArgs e)
         {
             if (e.Exception is ChecksFailedException)
             {
@@ -195,15 +193,15 @@ namespace Stickman
             }
         }
 
-        private async Task Commands_CommandExecuted(CommandExecutionEventArgs e)
+        private async Task Commands_CommandExecuted(CommandsNextExtension ext, CommandExecutionEventArgs e)
         {
             Console.WriteLine("{0}: {1}", e.Context.User.Username, e.Context.Message.Content);
             await Task.CompletedTask;
         }
 
         private DiscordClient m_discord = null;
-        private CommandsNextModule m_commands = null;
-        private InteractivityModule m_interactivity = null;
+        private CommandsNextExtension m_commands = null;
+        private InteractivityExtension m_interactivity = null;
 
         private List<IBotService> m_services = new List<IBotService>();
     }

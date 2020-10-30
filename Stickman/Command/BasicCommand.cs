@@ -9,7 +9,7 @@ using Stickman.Utility;
 
 namespace Stickman.Command
 {
-    public class BasicCommand
+    public class BasicCommand : BaseCommandModule
     {
         [Command("ping")]
         [Description("봇 테스트.")]

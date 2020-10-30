@@ -13,6 +13,7 @@ namespace Stickman
         public static readonly ulong MemberRoleId = 596712853268987916ul;
         public static readonly ulong PunishRoleId = 610615224558551053ul;
         public static readonly ulong QuietChannelId = 599577583138373652ul;
+        public static readonly ulong AuthChannelId = 596709527953342464ul;
         public static readonly ulong SubchannelGroupId = 611202798234632202ul;
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus.EventArgs;
 using Stickman.Command;
+using DSharpPlus.Entities;
 
 namespace Stickman.KeywordService
 {
@@ -43,7 +44,7 @@ namespace Stickman.KeywordService
                             string noti = $"[{e.Guild.Name} : {e.Channel.Name}] {e.Author.Username}\n\"{msg.Trim()}\"";
                             foreach (ulong targetUser in keywordUsers)
                             {
-                                m_queue.Add((targetUser, noti));
+                                m_queue.Add((e.Guild, targetUser, noti));
                             }
                         }
                     }
@@ -69,7 +70,7 @@ namespace Stickman.KeywordService
         }
 
         private readonly KeywordManager m_manager;
-        private readonly List<(ulong, string)> m_queue = new List<(ulong, string)>();
+        private readonly List<(DiscordGuild, ulong, string)> m_queue = new List<(DiscordGuild, ulong, string)>();
         private readonly object m_syncQueue = new object();
 
         public void InitService(DiscordClient discord)
@@ -84,7 +85,7 @@ namespace Stickman.KeywordService
 
         public void UpdateService(DiscordClient discord)
         {
-            (ulong, string)[] queue = null;
+            (DiscordGuild, ulong, string)[] queue = null;
 
             lock (m_syncQueue)
             {
@@ -100,11 +101,12 @@ namespace Stickman.KeywordService
             {
                 var jobs = new List<Task>();
 
-                foreach (var (user, msg) in queue)
+                foreach (var (guild, userId, msg) in queue)
                 {
                     var task = Task.Factory.StartNew(async () =>
                     {
-                        var dm = await discord.CreateDmAsync(await discord.GetUserAsync(user));
+                        var member = await guild.GetMemberAsync(userId);
+                        var dm = await member.CreateDmChannelAsync();
                         await dm.SendMessageAsync(msg);
                     });
                     jobs.Add(task);

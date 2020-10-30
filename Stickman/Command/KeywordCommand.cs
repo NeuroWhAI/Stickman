@@ -8,7 +8,7 @@ using DSharpPlus.CommandsNext.Attributes;
 
 namespace Stickman.Command
 {
-    class KeywordCommand
+    class KeywordCommand : BaseCommandModule
     {
         [Command("keyword")]
         [Description("키워드 알림 설정.")]

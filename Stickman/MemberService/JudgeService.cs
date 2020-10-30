@@ -180,11 +180,12 @@ namespace Stickman.MemberService
             var punishRole = guild.GetRole(DiscordConstants.PunishRoleId);
             string reason = $"Stop user for {time} seconds.";
 
+            // TODO: 아래 조건 유효하게 변경.
             // 회원 역할이 있어야 활정을 받을 수 있음.
-            if (member.Roles.Count() > 0 && member.Roles.Any(role => role.Name == "회원"))
+            //if (member.Roles.Count() > 0 && member.Roles.Any(role => role.Name == "회원"))
             {
-                guild.RevokeRoleAsync(member, memberRole, reason);
-                guild.GrantRoleAsync(member, punishRole, reason);
+                member.GrantRoleAsync(punishRole, reason).Wait();
+                member.RevokeRoleAsync(memberRole, reason).Wait();
             }
 
 
@@ -205,11 +206,12 @@ namespace Stickman.MemberService
             var punishRole = guild.GetRole(DiscordConstants.PunishRoleId);
             string reason = "Release the user.";
 
+            // TODO: 아래 조건 유효하게 변경.
             // 정지 역할이 있어야 활정을 풀 수 있음.
-            if (member.Roles.Count() > 0 && member.Roles.Any(role => role.Name == "정지"))
+            //if (member.Roles.Count() > 0 && member.Roles.Any(role => role.Name == "정지"))
             {
-                guild.GrantRoleAsync(member, memberRole, reason);
-                guild.RevokeRoleAsync(member, punishRole, reason);
+                member.GrantRoleAsync(memberRole, reason).Wait();
+                member.RevokeRoleAsync(punishRole, reason).Wait();
             }
 
 
@@ -218,8 +220,9 @@ namespace Stickman.MemberService
 
         private int UpdateSpamGage(ulong userId, ulong channelId, DateTimeOffset timestamp)
         {
-            // 조용 채널에선 도배 판정하지 않음.
-            if (channelId == DiscordConstants.QuietChannelId)
+            // 조용, 인증 채널에선 도배 판정하지 않음.
+            if (channelId == DiscordConstants.QuietChannelId
+                || channelId == DiscordConstants.AuthChannelId)
             {
                 return 0;
             }

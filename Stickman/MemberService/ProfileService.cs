@@ -110,7 +110,7 @@ namespace Stickman.MemberService
                 .WithTitle(target.Username)
                 .WithDescription(string.IsNullOrWhiteSpace(profile.Description) ? "\u200B" : profile.Description)
                 .WithColor(new DiscordColor(255, 224, 160))
-                .WithThumbnailUrl(target.AvatarUrl)
+                .WithThumbnail(target.AvatarUrl)
                 .AddField("Level", $"{profile.Level} ({profile.Exp}/{m_userManager.MaxExp} Exp)");
 
             ctx.RespondAsync(embed: embed.Build()).Wait();

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Entities;
 using Stickman.Command;
+using DSharpPlus;
 
 namespace Stickman
 {
@@ -57,7 +58,7 @@ namespace Stickman
             bot.Start();
         }
 
-        private static async Task Bot_GuildMemberAdded(GuildMemberAddEventArgs e)
+        private static async Task Bot_GuildMemberAdded(DiscordClient client, GuildMemberAddEventArgs e)
         {
             // 환영 메세지를 보냅니다.
 

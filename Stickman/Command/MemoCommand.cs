@@ -9,7 +9,7 @@ using Stickman.MemoService;
 
 namespace Stickman.Command
 {
-    public class MemoCommand
+    public class MemoCommand : BaseCommandModule
     {
         [Command("memo")]
         [Description("메모를 보거나 편집합니다.")]

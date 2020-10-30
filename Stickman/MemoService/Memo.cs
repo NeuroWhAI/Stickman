@@ -70,7 +70,10 @@ namespace Stickman.MemoService
                 }
                 else if (cmd == "thumbnail")
                 {
-                    embed.ThumbnailUrl = arg;
+                    embed.Thumbnail = new DiscordEmbedBuilder.EmbedThumbnail
+                    {
+                        Url = arg,
+                    };
                 }
                 else if (cmd == "footer")
                 {

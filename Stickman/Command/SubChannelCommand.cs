@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Extensions;
 
 namespace Stickman.Command
 {
-    class SubchannelCommand
+    class SubchannelCommand : BaseCommandModule
     {
         [Command("channel")]
         [Description("서브 채널을 생성합니다.")]
@@ -51,8 +51,9 @@ namespace Stickman.Command
 이 정보는 `channels` 명령을 통해 다른 사람이 볼 수 있습니다.
 무엇을 하는 채널인지 쉽게 알 수 있도록 간단명료하게 작성해주세요.");
 
-            var interactivity = ctx.Client.GetInteractivityModule();
-            var msg = await interactivity.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(10));
+            var interactivity = ctx.Client.GetInteractivity();
+            var msg = (await interactivity.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(10)))
+                .Result;
 
             if (msg == null)
             {
@@ -61,14 +62,15 @@ namespace Stickman.Command
             }
 
 
-            string subject = msg.Message.Content.Replace('\n', ' ');
+            string subject = msg.Content.Replace('\n', ' ');
 
             await ctx.TriggerTypingAsync();
             await ctx.RespondAsync($@"입력하신 정보가 맞나요? (Y/N)
 채널명 : '{name}'
 주제 : '{subject}'");
 
-            msg = await interactivity.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(2));
+            msg = (await interactivity.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(2)))
+                .Result;
 
             if (msg == null)
             {
@@ -77,7 +79,7 @@ namespace Stickman.Command
             }
             else
             {
-                string res = msg.Message.Content.ToLower();
+                string res = msg.Content.ToLower();
 
                 var yesList = new[] { "y", "yes", "ㅇ", "ㅇㅇ", "네", "예", "응", "어", "넹", "넵", "그래" };
 
@@ -95,7 +97,7 @@ namespace Stickman.Command
                 await ctx.TriggerTypingAsync();
                 await ctx.RespondAsync($"<@&{DiscordConstants.StaffRoleId}>" + "의 수락을 기다리는 중입니다. (Y/N)");
 
-                msg = await interactivity.WaitForMessageAsync(xm =>
+                msg = (await interactivity.WaitForMessageAsync(xm =>
                 {
                     // 요청한 채널에서
                     if (xm.ChannelId == ctx.Channel.Id)
@@ -115,7 +117,7 @@ namespace Stickman.Command
                     }
 
                     return false;
-                }, TimeSpan.FromMinutes(30));
+                }, TimeSpan.FromMinutes(30))).Result;
 
                 if (msg == null)
                 {
@@ -124,7 +126,7 @@ namespace Stickman.Command
                 }
                 else
                 {
-                    string res = msg.Message.Content.ToLower();
+                    string res = msg.Content.ToLower();
 
                     if (res == "y")
                     {
@@ -215,7 +217,7 @@ namespace Stickman.Command
 
         [Command("close")]
         [Description("서브 채널을 완전히 삭제합니다.")]
-        [RequireRolesAttribute("스탭")]
+        [RequireRoles(RoleCheckMode.Any, "스탭")]
         public async Task CloseChannel(CommandContext ctx,
            [RemainingText, Description("채널 이름.")]
             string name = "")
@@ -239,8 +241,9 @@ namespace Stickman.Command
 
             await ctx.RespondAsync($"정말로 '{name}' 채널을 영구적으로 삭제할까요? (Y/N)");
 
-            var interactivity = ctx.Client.GetInteractivityModule();
-            var msg = await interactivity.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(2));
+            var interactivity = ctx.Client.GetInteractivity();
+            var msg = (await interactivity.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id, TimeSpan.FromMinutes(2)))
+                .Result;
 
             if (msg == null)
             {
@@ -248,7 +251,7 @@ namespace Stickman.Command
                 return;
             }
 
-            string res = msg.Message.Content.ToLower();
+            string res = msg.Content.ToLower();
 
             await ctx.TriggerTypingAsync();
 
