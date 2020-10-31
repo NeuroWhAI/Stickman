@@ -197,10 +197,10 @@ namespace Stickman.SubchannelService
 
             var user = guild.GetMemberAsync(userId).Result;
 
-            /*if (CheckUserSubchannelRole(user, name))
+            if (CheckUserSubchannelRole(user, name))
             {
                 return "이미 참여한 채널입니다.";
-            }*/
+            }
 
 
             string roleName = ROLE_PREFIX + name;
@@ -227,14 +227,9 @@ namespace Stickman.SubchannelService
             string roleName = ROLE_PREFIX + name;
             var user = guild.GetMemberAsync(userId).Result;
 
-            // TODO: 길드가 아닌 사용자의 역할 확인하기.
-            var chanRole = (from kv in guild.Roles
-                            let role = kv.Value
+            var chanRole = (from role in user.Roles
                             where role.Name == roleName
                             select role).FirstOrDefault();
-            /*var chanRole = (from role in user.Roles
-                            where role.Name == roleName
-                            select role).FirstOrDefault();*/
 
             if (chanRole == null)
             {
