@@ -1,0 +1,24 @@
+<html>
+
+<head>
+    <title>Redirecting to TPT Save...</title>
+</head>
+
+<body>
+    <p>
+        TPT 작품을 여는 중입니다.
+    </p>
+
+    <p>
+        작업이 완료되면 이 페이지를 닫으셔도 됩니다.
+    </p>
+
+    <script>
+        let id = window.location.href.split('?=')[1];
+        if (id && id.match(/[0-9]+/)) {
+            window.location.href = 'ptsave:' + id;
+        }
+    </script>
+</body>
+
+</html>
