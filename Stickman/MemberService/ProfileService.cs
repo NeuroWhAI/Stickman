@@ -103,14 +103,15 @@ namespace Stickman.MemberService
                 target = ctx.Message.MentionedUsers[0];
             }
 
+            var targetMember = ctx.Guild.GetMemberAsync(target.Id).Result;
             var profile = m_userManager.GetProfileCopy(target.Id);
 
 
             var embed = new DiscordEmbedBuilder()
-                .WithTitle(target.Username)
+                .WithTitle(targetMember.DisplayName)
                 .WithDescription(string.IsNullOrWhiteSpace(profile.Description) ? "\u200B" : profile.Description)
                 .WithColor(new DiscordColor(255, 224, 160))
-                .WithThumbnail(target.AvatarUrl)
+                .WithThumbnail(targetMember.AvatarUrl)
                 .AddField("Level", $"{profile.Level} ({profile.Exp}/{m_userManager.MaxExp} Exp)");
 
             ctx.RespondAsync(embed: embed.Build()).Wait();
