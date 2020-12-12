@@ -14,6 +14,7 @@ namespace Stickman.Command
     {
         [Command("channel")]
         [Description("서브 채널을 생성합니다.")]
+        [RequireRoles(RoleCheckMode.Any, "회원")]
         public async Task CreateChannel(CommandContext ctx,
             [RemainingText, Description("채널 이름. 10자 이하이며 영어(소문자), 한글 등의 문자와 붙임표(-)만 허용됩니다.")]
             string name = "")
@@ -165,6 +166,7 @@ namespace Stickman.Command
 
         [Command("join")]
         [Description("서브 채널에 참여합니다.")]
+        [RequireRoles(RoleCheckMode.Any, "회원")]
         public async Task JoinChannel(CommandContext ctx,
            [RemainingText, Description("참여할 채널 이름.")]
             string name = "")
