@@ -33,6 +33,7 @@ namespace Stickman
             bot.RegisterCommand<MembershipCommand>();
             bot.RegisterCommand<SubchannelCommand>();
             bot.RegisterCommand<KeywordCommand>();
+            bot.RegisterCommand<PowderCommand>();
 
             bot.GuildMemberAdded += Bot_GuildMemberAdded;
 
