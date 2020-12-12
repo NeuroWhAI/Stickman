@@ -136,9 +136,16 @@ namespace Stickman.Command
                 title = "　";
             }
 
+            string buttons = $"\\[ [🎮](https://neurowhai.github.io/Stickman/ptsave.html?={id})"
+                + $" / [📥](https://powdertoy.co.uk/GetSave.util?ID={id}) \\]";
+
             if (upCnt != null && downCnt != null)
             {
-                desc = $"▲{upCnt}/▼{downCnt}\n\n" + (desc ?? string.Empty);
+                desc = $"▲{upCnt}/▼{downCnt}　{buttons}\n\n{desc ?? string.Empty}";
+            }
+            else
+            {
+                desc = $"{buttons}\n\n{desc ?? string.Empty}";
             }
 
             var embed = new DiscordEmbedBuilder()
