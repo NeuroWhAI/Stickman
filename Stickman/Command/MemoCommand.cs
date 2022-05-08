@@ -6,6 +6,7 @@ using System.IO;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Stickman.MemoService;
+using DSharpPlus.Entities;
 
 namespace Stickman.Command
 {
@@ -132,20 +133,8 @@ namespace Stickman.Command
             }
             else
             {
-                string path = Path.GetTempFileName();
-
-                try
-                {
-                    File.WriteAllText(path + ".txt", memo.Content);
-
-                    await ctx.RespondWithFileAsync(path + ".txt",
-                        string.Format("```\n{0}\n```", memo.Content));
-                }
-                finally
-                {
-                    File.Delete(path);
-                    File.Delete(path + ".txt");
-                }
+                await ctx.RespondAsync(new DiscordMessageBuilder()
+                    .WithFile(memo.Title + ".txt", new MemoryStream(Encoding.UTF8.GetBytes(memo.Content))));
             }
         }
 
@@ -241,20 +230,8 @@ namespace Stickman.Command
             }
             else
             {
-                string path = Path.GetTempFileName();
-
-                try
-                {
-                    File.WriteAllText(path + ".txt", memo.Content);
-
-                    await ctx.RespondWithFileAsync(path + ".txt",
-                        string.Format("rev{0}\n```\n{1}\n```", revision, memo.Content));
-                }
-                finally
-                {
-                    File.Delete(path);
-                    File.Delete(path + ".txt");
-                }
+                await ctx.RespondAsync(new DiscordMessageBuilder()
+                    .WithFile($"{memo.Title}#{memo.Revision}.txt", new MemoryStream(Encoding.UTF8.GetBytes(memo.Content))));
             }
         }
 

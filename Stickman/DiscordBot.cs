@@ -43,12 +43,15 @@ namespace Stickman
         {
             m_discord.ConnectAsync().Wait();
 
+            while (!this.Online)
+            {
+                Task.Delay(100).Wait();
+            }
+
             foreach (var service in m_services)
             {
                 service.InitService(m_discord);
             }
-
-            this.Online = true;
 
             while (this.Online)
             {
@@ -111,6 +114,7 @@ namespace Stickman
         {
             m_discord.Ready += async (client, arg) =>
             {
+                this.Online = true;
                 Console.WriteLine("Bot ready!");
 
                 await Task.CompletedTask;
